@@ -1,13 +1,12 @@
 use bevy::{
-    prelude::*,
-    sprite::{Wireframe2dConfig, Wireframe2dPlugin, MaterialMesh2dBundle, Mesh2dHandle},
-    color::palettes::*
+    color::palettes::*, ecs::query, input::keyboard::Key, prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle, Wireframe2dConfig, Wireframe2dPlugin}
 };
 
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, Wireframe2dPlugin))
         .add_systems(Startup, setup)
+        .add_systems(Update, update)
         .run();
 }
 
@@ -23,5 +22,24 @@ fn setup(mut commands: Commands,
         material: materials.add(color),
         transform: Transform::from_xyz(0., 0., 0.),
         ..default()
-    });
+    })
+    .insert(Player);
+}
+
+#[derive(Component)]
+struct Player;
+
+fn update(mut query: Query<(&Player, &mut Transform)>, input: Res<ButtonInput<KeyCode>>) {
+    for (_, mut transform) in query.iter_mut() {
+        let mut direction = Vec3::ZERO;
+        if input.pressed(KeyCode::KeyA) {
+            direction.x -= 1.0;
+        }
+    
+        if input.pressed(KeyCode::KeyD) {
+            direction.x += 1.0;            
+        }
+
+        transform.translation += direction.normalize_or_zero();
+    }
 }
