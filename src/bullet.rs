@@ -36,17 +36,20 @@ impl Bullet {
         input: Res<ButtonInput<KeyCode>>,
         mut query: Query<(&mut Transform, &mut Visibility), With<Bullet>>,
         player: Query<&Transform, (With<Player>, Without<Bullet>)>,
+        time: Res<Time>,
     ) {
         let player_t = player.single();
         if input.pressed(KeyCode::Space) {
             for (mut transform, mut visibility) in query.iter_mut() {
                 *visibility = Visibility::Visible;
                 transform.translation.x = player_t.translation.x;
+                transform.translation.y = player_t.translation.y;
             }
         } else {
-            for (_, mut visibility) in query.iter_mut() {
+            for (mut transform, mut visibility) in query.iter_mut() {
                 if *visibility == Visibility::Visible {
-                    *visibility = Visibility::Hidden;
+                    // *visibility = Visibility::Hidden;
+                    transform.translation.y += 10.0;
                 }
             }
         }
