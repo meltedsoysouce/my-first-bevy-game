@@ -1,5 +1,9 @@
 use bevy::{
-    color::palettes::*, ecs::query, input::keyboard::Key, prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle, Wireframe2dConfig, Wireframe2dPlugin}
+    color::palettes::*,
+    ecs::query,
+    input::keyboard::Key,
+    prelude::*,
+    sprite::{MaterialMesh2dBundle, Mesh2dHandle, Wireframe2dConfig, Wireframe2dPlugin},
 };
 
 fn main() {
@@ -10,20 +14,32 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands,
-         mut meshes: ResMut<Assets<Mesh>>,
-         mut materials: ResMut<Assets<ColorMaterial>>) {
+fn setup(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+) {
     commands.spawn(Camera2dBundle::default());
     let color = Color::srgb(0.3, 0.7, 0.5);
 
     let shape = Mesh2dHandle(meshes.add(Rectangle::new(50., 100.)));
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: shape,
-        material: materials.add(color),
-        transform: Transform::from_xyz(0., 0., 0.),
-        ..default()
-    })
-    .insert(Player);
+    commands
+        .spawn(MaterialMesh2dBundle {
+            mesh: shape,
+            material: materials.add(color),
+            transform: Transform::from_xyz(0., 0., 0.),
+            ..default()
+        })
+        .insert(Player);
+
+    commands.spawn(
+        TextBundle::from_section("aaa", TextStyle::default()).with_style(Style {
+            position_type: PositionType::Absolute,
+            bottom: Val::Px(10.0),
+            left: Val::Px(10.0),
+            ..default()
+        }),
+    );
 }
 
 #[derive(Component)]
@@ -35,9 +51,9 @@ fn update(mut query: Query<(&Player, &mut Transform)>, input: Res<ButtonInput<Ke
         if input.pressed(KeyCode::KeyA) {
             direction.x -= 1.0;
         }
-    
+
         if input.pressed(KeyCode::KeyD) {
-            direction.x += 1.0;            
+            direction.x += 1.0;
         }
 
         transform.translation += direction.normalize_or_zero();
