@@ -1,16 +1,17 @@
 mod bullet;
+mod enemy;
 mod player;
 
 use bevy::{prelude::*, sprite::Wireframe2dPlugin};
 
-use crate::bullet::Bullet;
-use crate::player::Player;
+use crate::{bullet::Bullet, enemy::Enemy, player::Player};
 
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, Wireframe2dPlugin))
         .add_plugins(Player)
         .add_plugins(Bullet)
+        .add_plugins(Enemy)
         .add_systems(Startup, setup)
         .add_systems(Update, interact)
         .run();

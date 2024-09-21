@@ -14,7 +14,7 @@ impl Player {
     ) {
         commands
             .spawn(MaterialMesh2dBundle {
-                mesh: Mesh2dHandle(meshes.add(Rectangle::new(50., 100.))),
+                mesh: Mesh2dHandle(meshes.add(Rectangle::new(50., 50.))),
                 material: materials.add(Color::srgb(0.3, 0.7, 0.5)),
                 transform: Transform::from_xyz(0., 0., 0.),
                 ..default()
