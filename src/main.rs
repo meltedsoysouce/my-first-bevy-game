@@ -1,16 +1,20 @@
+mod player;
+
 use bevy::{
     color::palettes::*,
     ecs::query,
     input::keyboard::Key,
     prelude::*,
-    sprite::{MaterialMesh2dBundle, Mesh2dHandle, Wireframe2dConfig, Wireframe2dPlugin},
+    sprite::{MaterialMesh2dBundle, Mesh2dHandle, Wireframe2dPlugin},
 };
+
+use crate::player::Player;
 
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, Wireframe2dPlugin))
+        .add_plugins(Player)
         .add_systems(Startup, setup)
-        .add_systems(Update, update)
         .run();
 }
 
@@ -40,22 +44,4 @@ fn setup(
             ..default()
         }),
     );
-}
-
-#[derive(Component)]
-struct Player;
-
-fn update(mut query: Query<(&Player, &mut Transform)>, input: Res<ButtonInput<KeyCode>>) {
-    for (_, mut transform) in query.iter_mut() {
-        let mut direction = Vec3::ZERO;
-        if input.pressed(KeyCode::KeyA) {
-            direction.x -= 1.0;
-        }
-
-        if input.pressed(KeyCode::KeyD) {
-            direction.x += 1.0;
-        }
-
-        transform.translation += direction.normalize_or_zero();
-    }
 }
