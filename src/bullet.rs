@@ -34,22 +34,23 @@ impl Bullet {
 
     fn update(
         input: Res<ButtonInput<KeyCode>>,
-        mut query: Query<(&mut Transform, &mut Visibility), With<Bullet>>,
+        mut query: Query<(&mut Transform, &mut Visibility, &ViewVisibility), With<Bullet>>,
         player: Query<&Transform, (With<Player>, Without<Bullet>)>,
-        time: Res<Time>,
     ) {
         let player_t = player.single();
         if input.pressed(KeyCode::Space) {
-            for (mut transform, mut visibility) in query.iter_mut() {
+            for (mut transform, mut visibility, _) in query.iter_mut() {
                 *visibility = Visibility::Visible;
                 transform.translation.x = player_t.translation.x;
                 transform.translation.y = player_t.translation.y;
             }
         } else {
-            for (mut transform, mut visibility) in query.iter_mut() {
-                if *visibility == Visibility::Visible {
-                    // *visibility = Visibility::Hidden;
+            for (mut transform, mut visibility, r_visible) in query.iter_mut() {
+                if *visibility == Visibility::Visible && r_visible.get() {
                     transform.translation.y += 10.0;
+                }
+                if r_visible.get() == false {
+                    *visibility = Visibility::Hidden;
                 }
             }
         }
