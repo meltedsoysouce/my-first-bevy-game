@@ -15,6 +15,7 @@ fn main() {
         .add_plugins((DefaultPlugins, Wireframe2dPlugin))
         .add_plugins(Player)
         .add_systems(Startup, setup)
+        .add_systems(Update, interact)
         .run();
 }
 
@@ -44,4 +45,11 @@ fn setup(
             ..default()
         }),
     );
+}
+
+fn interact(mut query: Query<&mut Text>, input: Res<ButtonInput<KeyCode>>) {
+    let mut txt = query.single_mut();
+    if input.just_pressed(KeyCode::Space) {
+        txt.sections[0].value = "bbb".to_string();
+    }
 }

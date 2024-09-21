@@ -39,20 +39,11 @@ impl Player {
             transform.translation += direction.normalize_or_zero();
         }
     }
-
-    pub fn interact(query: Query<&Player>, input: Res<ButtonInput<KeyCode>>) {
-        for _ in query.iter() {
-            if input.just_pressed(KeyCode::Space) {
-                println!("Interacting with the player");
-            }
-        }
-    }
 }
 
 impl Plugin for Player {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, Player::setup)
-            .add_systems(Update, Player::move_player)
-            .add_systems(Update, Player::interact);
+            .add_systems(Update, Player::move_player);
     }
 }
