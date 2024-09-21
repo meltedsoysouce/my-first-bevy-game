@@ -1,12 +1,6 @@
 mod player;
 
-use bevy::{
-    color::palettes::*,
-    ecs::query,
-    input::keyboard::Key,
-    prelude::*,
-    sprite::{MaterialMesh2dBundle, Mesh2dHandle, Wireframe2dPlugin},
-};
+use bevy::{prelude::*, sprite::Wireframe2dPlugin};
 
 use crate::player::Player;
 
@@ -19,23 +13,8 @@ fn main() {
         .run();
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
+fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
-    let color = Color::srgb(0.3, 0.7, 0.5);
-
-    let shape = Mesh2dHandle(meshes.add(Rectangle::new(50., 100.)));
-    commands
-        .spawn(MaterialMesh2dBundle {
-            mesh: shape,
-            material: materials.add(color),
-            transform: Transform::from_xyz(0., 0., 0.),
-            ..default()
-        })
-        .insert(Player);
 
     commands.spawn(
         TextBundle::from_section("aaa", TextStyle::default()).with_style(Style {
@@ -50,6 +29,6 @@ fn setup(
 fn interact(mut query: Query<&mut Text>, input: Res<ButtonInput<KeyCode>>) {
     let mut txt = query.single_mut();
     if input.just_pressed(KeyCode::Space) {
-        txt.sections[0].value = "bbb".to_string();
+        txt.sections[0].value = "space key pressed".to_string();
     }
 }
